@@ -247,16 +247,16 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="pushButton_4">
              <property name="text">
-              <string>start designer</string>
+              <string>recompile</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="pushButton_5">
              <property name="text">
-              <string>recompile</string>
+              <string>start designer</string>
              </property>
             </widget>
            </item>

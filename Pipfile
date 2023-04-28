@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 pyside6 = "*"
+schedule = "*"
+orjson = "*"
+watchdog = "*"
 
 [dev-packages]
 
