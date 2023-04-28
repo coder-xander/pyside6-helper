@@ -14,7 +14,7 @@ if __name__ == '__main__':
             "path_info": {
                 "qt_ui_file_path": r"C:\Users\EPR\Documents\xander\github\pyside-auto-c\qt_ui_files",
                 "qt_py_ui_path": r"C:\Users\EPR\Documents\xander\github\pyside-auto-c\qt_py_ui_files",
-                "qt_pyside6_uic_path": None,
+                "qt_pyside6_uic_path": r"C:\Users\EPR\.virtualenvs\pyside-auto-c--MnN_OA_\Scripts\pyside6-uic.exe",
                 "qt_pyside6_rcc_path": None,
             }
         })
