@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="编译ui文件" pattern="file[pyside-auto-c]:qt_ui_files//*.ui" />
+  <scope name="编译ui文件" pattern="file[pyside6-assistant]:qt_ui_files//*.ui" />
 </component>

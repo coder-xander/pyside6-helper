@@ -8,6 +8,8 @@ pyside6 = "*"
 schedule = "*"
 orjson = "*"
 watchdog = "*"
+pathlib = "*"
+pywin32 = "*"
 
 [dev-packages]
 
