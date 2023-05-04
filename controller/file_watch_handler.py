@@ -33,45 +33,36 @@ from model.app_data import AppData
 #             rel_path = os.path.relpath(root, targetDir)
 #             if rel_path and not os.path.exists(os.path.join(rawDir, rel_path)):
 #                 shutil.rmtree(root)
-def fileInFilter(fileName):
-    return fileName.split(".")[-1] in ["ui"]
-def renameFileSuffix(uiFilename, suffixName):
-    nameList  =uiFilename.split(".")
-    nameList[-1] = suffixName
-    return ".".join(nameList)
+
 
 class fileWatchHandle(FileSystemEventHandler):
     def __init__(self):
         super().__init__()
         self.appConfig:AppData= AppData()
 
-    def getReflectPathFromRawPath(self,rawPath,isDir=False):
-        fileDirAndName = os.path.split(rawPath)
-        dir = fileDirAndName[0]
-        for i in range(len(dir)):
-            if dir[i] == self.appConfig.qt_ui_dir_path.split("\\")[-1]:
-                dir[i] = self.appConfig.qt_py_ui_dir_path.split("\\")[-1]
-                break
-                pass
-        name = fileDirAndName[1]
-        if not fileInFilter(name):
-            return None
-        name = renameFileSuffix(name, "py")
-        return os.path.join(dir, name)
-
-
-
 
     def on_created(self, event):
         print(f"new file {event.src_path}")
+        newFile:str  =   event.src_path
         if event.is_directory:
             print("新文件夹")
             return
-        path = self.getReflectPathFromRawPath(event.src_path)
-        if path is None:
-            return
+        relNewFilePath =   os.path.relpath(newFile, self.appConfig.qt_ui_dir_path)
+        relNewFilePathDir ,relNewFilePathFileName = os.path.split(relNewFilePath)
+        #转换文件名
+        relNewFilePathFileNameList:list  = relNewFilePathFileName.split(".")
+        if relNewFilePathFileNameList[-1] == "ui":
+            relNewFilePathFileNameList[-1] = "py"
+        pyfilePath =  os.path.normpath(".".join(relNewFilePathFileNameList))
+        pyRelPath =  os.path.join(relNewFilePathDir, pyfilePath)#相对路径
+        #得到目标文件路径
+        pyOutPath = os.path.join(self.appConfig.qt_py_ui_dir_path, pyRelPath)
+        pyOutDir ,pyOutFilename =  os.path.split(pyOutPath)
+        if not os.path.exists(pyOutDir):
+            os.makedirs(pyOutDir)
+        #编译
 
-        result =  subprocess.run([self.appConfig.pyside6_uic_path,"-o",path],capture_output=True,text=True)
+        result =  subprocess.run([self.appConfig.pyside6_uic_path, newFile,"-o", pyOutPath],capture_output=True,text=True)
         print(result.stdout)
         if result.returncode == 0:
             print("编译成功")
