@@ -4,13 +4,77 @@ from PySide6.QtCore import QTimer
 import orjson
 from PySide6.QtCore import QObject
 import tools
+
+
 # 配置文件
 @tools.singleton
 class AppData(QObject):
+    @property
+    def path_info_str(self):
+        return "path_info"
+    # ----------------------------------------
+    @property
+    def qt_py_ui_dir_str(self):
+        return "qt_py_ui_dir"
+    @property
+    def qt_py_ui_dir_path(self) -> str:
+        return self.data[self.path_info_str][self.qt_py_ui_dir_str]
+
+    @qt_py_ui_dir_path.setter
+    def qt_py_ui_dir_path(self, value):
+        self.data[self.path_info_str][self.qt_py_ui_dir_str] = value
+
+    # ----------------------------------------
+
+    @property
+    def qt_ui_dir_str(self):
+        return "qt_ui_dir"
+    @property
+    def qt_ui_dir_path(self) -> str:
+        return self.data[self.path_info_str][self.qt_ui_dir_str]
+
+    @qt_ui_dir_path.setter
+    def qt_ui_dir_path(self, value):
+        self.data[self.path_info_str][self.qt_ui_dir_str] = value
+
+    # ----------------------------------------
+    @property
+    def pyside6_uic_path_str(self):
+        return "pyside6_uic_path"
+    @property
+    def pyside6_uic_path(self) -> str:
+        return self.data[self.path_info_str][self.pyside6_uic_path_str]
+
+    @pyside6_uic_path.setter
+    def pyside6_uic_path(self, value):
+        self.data[self.path_info_str][self.pyside6_uic_path_str] = value
+
+    # ----------------------------------------
+    @property
+    def pyside6_rcc_path_str(self):
+        return "pyside6_rcc_path"
+
+    @property
+    def pyside6_rcc_path(self) -> str:
+        return self.data[self.path_info_str][self.pyside6_uic_path_str]
+
+    @pyside6_rcc_path.setter
+    def pyside6_rcc_path(self, value):
+        self.data[self.path_info_str][self.pyside6_uic_path_str] = value
+
+    # ----------------------------------------
+    # 线程安全的单例
     def __init__(self):
         super().__init__()
         self.save_timer = None
-        self.data = None
+        self.data = {
+            self.path_info_str: {
+                self.qt_ui_dir_str: r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_ui_files",
+                self.qt_py_ui_dir_str: r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_py_ui_files",
+                self.pyside6_uic_path_str: r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe",
+                self.pyside6_rcc_path_str: None,
+            }
+        }
         self.file_save_lock = threading.Lock()
 
     def setData(self, data):
@@ -61,5 +125,3 @@ class AppData(QObject):
         else:
             raise Exception("timer 还没创建")
         pass
-
-    # 线程安全的单例

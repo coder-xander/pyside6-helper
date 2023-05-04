@@ -5,7 +5,7 @@ from PySide6.QtCore import  QObject
 from watchdog.events import FileSystemEventHandler
 from watchdog import observers
 
-from model import app_data
+from model.app_data import AppData
 
 
 # def syncDirBetweenTwoDir(targetDir, rawDir, reverse=False):
@@ -43,14 +43,14 @@ def renameFileSuffix(uiFilename, suffixName):
 class fileWatchHandle(FileSystemEventHandler):
     def __init__(self):
         super().__init__()
-        self.appConfig= app_data.AppData()
+        self.appConfig:AppData= AppData()
 
     def getReflectPathFromRawPath(self,rawPath,isDir=False):
         fileDirAndName = os.path.split(rawPath)
         dir = fileDirAndName[0]
         for i in range(len(dir)):
-            if dir[i] == self.appConfig.data["path_info"]["qt_ui_file_path"].split("\\")[-1]:
-                dir[i] = self.appConfig.data["path_info"]["qt_py_ui_path"].split("\\")[-1]
+            if dir[i] == self.appConfig.qt_ui_dir_path.split("\\")[-1]:
+                dir[i] = self.appConfig.qt_py_ui_dir_path.split("\\")[-1]
                 break
                 pass
         name = fileDirAndName[1]
@@ -58,6 +58,10 @@ class fileWatchHandle(FileSystemEventHandler):
             return None
         name = renameFileSuffix(name, "py")
         return os.path.join(dir, name)
+
+
+
+
     def on_created(self, event):
         print(f"new file {event.src_path}")
         if event.is_directory:
@@ -67,7 +71,7 @@ class fileWatchHandle(FileSystemEventHandler):
         if path is None:
             return
 
-        result =  subprocess.run([self.appConfig.data["path_info"]["qt_pyside6_uic_path"],"-o",path],capture_output=True,text=True)
+        result =  subprocess.run([self.appConfig.pyside6_uic_path,"-o",path],capture_output=True,text=True)
         print(result.stdout)
         if result.returncode == 0:
             print("编译成功")
@@ -87,11 +91,11 @@ class fileWatchHandle(FileSystemEventHandler):
 class fileWatchHelper(QObject):
     def __init__(self):
         self.observer = observers.Observer()
-        self.appData = app_data.AppData()
+        self.appData:AppData = AppData()
         pass
     def startFileWatch(self):
         self.observer = observers.Observer()
-        self.observer.schedule(fileWatchHandle(),path=self.appData.data["path_info"]["qt_ui_file_path"],recursive=True)
+        self.observer.schedule(fileWatchHandle(),path=self.appData.qt_ui_dir_path,recursive=True)
         self.observer.start()
         pass
 
