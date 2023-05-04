@@ -3,9 +3,9 @@ import threading
 from PySide6.QtCore import QTimer
 import orjson
 from PySide6.QtCore import QObject
-import singleton
+import tools
 # 配置文件
-@singleton.singleton
+@tools.singleton
 class AppData(QObject):
     def __init__(self):
         super().__init__()
