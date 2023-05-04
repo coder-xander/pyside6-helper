@@ -1,12 +1,13 @@
 import os.path
-import shutil
 import subprocess
 
 from PySide6.QtCore import  QObject
 from watchdog.events import FileSystemEventHandler
 from watchdog import observers
 
-import app_data
+from model import app_data
+
+
 # def syncDirBetweenTwoDir(targetDir, rawDir, reverse=False):
 #     """
 #     在 a 文件夹下检查是否有 b 文件夹下的所有文件夹，没有的则创建。
