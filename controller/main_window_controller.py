@@ -11,6 +11,9 @@ class MainWindowController:
         self.ui: Ui_MainWindow = ui
         # 现在是不是在添加一个新的项目中
         self.isAddingProjectFlag = False
+        self.initForNewProjectWidget()
+
+    def initForNewProjectWidget(self):
         # 初始化一个空widget进行收集项目的信息
         blankWidgetUi = Ui_ProjectSetting()
         widget = QWidget()
@@ -26,6 +29,16 @@ class MainWindowController:
         blankWidgetUi.widget_3.layout().addWidget(cancelBtn)
         self.ui.stackedWidget.addWidget(widget)
         self.forNewProjectWidget.hide()
+        def onSaveBtnClicked():
+            print("ss")
+            pass
+        saveBtn.clicked.connect(onSaveBtnClicked)
+
+        def onCancelBtnClicked():
+            print("ss")
+            pass
+
+        saveBtn.clicked.connect(onCancelBtnClicked)
 
     def run(self):
         if self.ui is None:

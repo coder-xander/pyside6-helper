@@ -8,18 +8,6 @@ from model.setting_manager import SettingManager, Project
 from controller import file_watch_handler
 from view.qt_py_ui_files.ui_main_window import Ui_MainWindow
 
-
-class one:
-    def __init__(self):
-        self.name = "dhc"
-
-
-class TestClass:
-    def __init__(self):
-        self.nams = ["d", "ddd"]
-        self.ojjj = [one(), one()]
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     appData = SettingManager()
