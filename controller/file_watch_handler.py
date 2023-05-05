@@ -5,7 +5,7 @@ from PySide6.QtCore import QObject
 from watchdog.events import FileSystemEventHandler
 from watchdog import observers
 
-from model.app_data import AppData
+from model.setting_manager import SettingManager
 
 
 # def syncDirBetweenTwoDir(targetDir, rawDir, reverse=False):
@@ -38,7 +38,7 @@ from model.app_data import AppData
 class fileWatchHandle(FileSystemEventHandler):
     def __init__(self):
         super().__init__()
-        self.appConfig: AppData = AppData()
+        self.appConfig: SettingManager = SettingManager()
 
     def on_created(self, event):
         print(f"new file {event.src_path}")
@@ -85,12 +85,12 @@ class fileWatchHandle(FileSystemEventHandler):
 class fileWatchHelper(QObject):
     def __init__(self):
         self.observer = observers.Observer()
-        self.appData: AppData = AppData()
+        self.appData: SettingManager = SettingManager()
         pass
 
     def startFileWatch(self):
         self.observer = observers.Observer()
-        self.observer.schedule(fileWatchHandle(), path=self.appData.qt_ui_dir_path, recursive=True)
+        # self.observer.schedule(fileWatchHandle(), path=self.appData.qt_ui_dir_path, recursive=True)
         self.observer.start()
         pass
 
