@@ -11,32 +11,34 @@ from view.qt_py_ui_files.ui_main_window import Ui_MainWindow
 
 class one:
     def __init__(self):
-        self.name="dhc"
+        self.name = "dhc"
+
+
 class TestClass:
     def __init__(self):
-        self.nams=["d","ddd"]
-        self.ojjj = [one(),one()]
-
+        self.nams = ["d", "ddd"]
+        self.ojjj = [one(), one()]
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     appData = SettingManager()
     mainWindow = QMainWindow()
-    uiMainwindow =  Ui_MainWindow()
+    uiMainwindow = Ui_MainWindow()
 
     uiMainwindow.setupUi(mainWindow)
-    mainWindowController =  MainWindowController()
-    mainWindowController.ui = uiMainwindow
+    mainWindowController = MainWindowController(uiMainwindow)
     mainWindowController.run()
 
-    #添加一个项目
-    newProject = Project()
-    newProject.name="auto c"
-    newProject.qt_ui_dir = r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_ui_files"
-    newProject.qt_py_ui_dir = r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_py_ui_files"
-    newProject.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
-    mainWindowController.newProject(newProject)
+    # 添加一个项目
+    # newProject = Project()
+    # newProject.name = "auto c"
+    # newProject.qt_ui_dir = r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_ui_files"
+    # newProject.qt_py_ui_dir = r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_py_ui_files"
+    # newProject.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
+    # mainWindowController.addOneProject(newProject)
+
+
     # myselfDir =  os.path.dirname(script_path)
     # script_path = os.path.abspath(__file__)#脚本所在的路径
 
