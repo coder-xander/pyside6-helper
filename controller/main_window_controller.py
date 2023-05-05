@@ -1,3 +1,4 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton
 
 from setting_manager import Project
@@ -9,6 +10,7 @@ class MainWindowController:
     def __init__(self, ui):
         # 控制的对象
         self.ui: Ui_MainWindow = ui
+
         # 现在是不是在添加一个新的项目中
         self.isAddingProjectFlag = False
         self.initForNewProjectWidget()
@@ -27,7 +29,9 @@ class MainWindowController:
         cancelBtn.setProperty("func", "cancel")
         blankWidgetUi.widget_3.layout().addWidget(saveBtn)
         blankWidgetUi.widget_3.layout().addWidget(cancelBtn)
-        self.ui.stackedWidget.addWidget(widget)
+        # widget.setParent(self.mainWindow)
+        # self.ui.stackedWidget.addWidget(widget)
+        widget.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.forNewProjectWidget.hide()
         def onSaveBtnClicked():
             print("ss")
@@ -48,7 +52,7 @@ class MainWindowController:
 
     def uiAddOneProject(self):
         if self.forNewProjectWidget is not None:
-            self.ui.stackedWidget.setCurrentWidget(self.forNewProjectWidget)
+            # self.ui.stackedWidget.setCurrentWidget(self.forNewProjectWidget)
             self.forNewProjectWidget.show()
         else:
             raise "error"
