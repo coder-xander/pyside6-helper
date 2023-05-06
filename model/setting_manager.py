@@ -54,7 +54,10 @@ class SettingManager(QObject):
         with self.file_save_lock:
             with open(f'{script_dir}\{g_save_file_name}', 'wb') as f:
                 pickle.dump(self.setting, f, -1)
-                print(f"save file now--{self.setting.projects}")
+                names =[]
+                for p in self.setting.projects:
+                    names.append(p.name)
+                print(f"save--{names}")
         return self
 
     def load(self):
@@ -67,7 +70,7 @@ class SettingManager(QObject):
                     pass
             with open(f'{script_dir}\{g_save_file_name}', 'rb') as f:
                 self.setting = pickle.load(f)
-                print("load file now")
+                print("load---")
         return self
 
     def startAutoSave(self):

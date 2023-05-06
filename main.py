@@ -38,6 +38,7 @@ if __name__ == '__main__':
     # 设置配置文件
     # 如果两个数组全部相同，则返回 -1
     # 将输入路径中的斜杠替换为系统默认的路径分隔符
+    # settingManager.setting.projects=[]
     settingManager.save()
     fileWatchHelper = file_watch_handler.fileWatchHelper()
     fileWatchHelper.startFileWatch()

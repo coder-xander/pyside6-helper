@@ -31,6 +31,11 @@ class Ui_ProjectSetting(object):
         self.widget_3.setObjectName(u"widget_3")
         self.horizontalLayout_6 = QHBoxLayout(self.widget_3)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.lineEdit = QLineEdit(self.widget_3)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.horizontalLayout_6.addWidget(self.lineEdit)
+
         self.pushButton_32 = QPushButton(self.widget_3)
         self.pushButton_32.setObjectName(u"pushButton_32")
         self.pushButton_32.setMaximumSize(QSize(16777215, 16777215))
@@ -42,11 +47,6 @@ class Ui_ProjectSetting(object):
         self.pushButton_30.setMaximumSize(QSize(16777215, 16777215))
 
         self.horizontalLayout_6.addWidget(self.pushButton_30)
-
-        self.pushButton_5 = QPushButton(self.widget_3)
-        self.pushButton_5.setObjectName(u"pushButton_5")
-
-        self.horizontalLayout_6.addWidget(self.pushButton_5)
 
         self.pushButton_6 = QPushButton(self.widget_3)
         self.pushButton_6.setObjectName(u"pushButton_6")
@@ -301,7 +301,6 @@ class Ui_ProjectSetting(object):
         ProjectSetting.setWindowTitle(QCoreApplication.translate("ProjectSetting", u"Form", None))
         self.pushButton_32.setText(QCoreApplication.translate("ProjectSetting", u"running", None))
         self.pushButton_30.setText(QCoreApplication.translate("ProjectSetting", u"running", None))
-        self.pushButton_5.setText(QCoreApplication.translate("ProjectSetting", u"project name", None))
         self.pushButton_6.setText(QCoreApplication.translate("ProjectSetting", u"run", None))
         self.pushButton_8.setText(QCoreApplication.translate("ProjectSetting", u"stop", None))
         self.pushButton_9.setText(QCoreApplication.translate("ProjectSetting", u"setting", None))
