@@ -11,16 +11,27 @@ g_save_file_name = "pyside6-helper-setting.pyh"
 
 class Project:
     def __init__(self):
-        self.qt_ui_dir = ""
-        self.qt_py_ui_dir = ""
+        self.in_ui_files_dir = ""
+        self.out_py_files_dir = ""
         self.pyside6_uic_path = ""
         self.pyside6_rcc_path = ""
         self.pyside6_assistant_path = ""
+        self.pyside6_linguist_path = ""
+        self.pyside6_designer_path = ""
+        self.logs = []
         self.name = ""
         self.isRunning = False
 
-
-# 配置文件
+    def isVaild(self):
+        res = os.path.isdir(self.in_ui_files_dir) and \
+              os.path.isdir(self.out_py_files_dir) and \
+              os.path.isfile(self.pyside6_linguist_path)and \
+              os.path.isfile(self.pyside6_assistant_path)and\
+              os.path.isfile(self.pyside6_rcc_path)and \
+              os.path.isfile(self.pyside6_uic_path)and \
+              self.name != ""
+        return res
+        # 配置文件
 class Setting:
     def __init__(self):
         self.save_timer = None
