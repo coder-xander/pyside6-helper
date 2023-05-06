@@ -10,10 +10,12 @@ from view.qt_py_ui_files.ui_main_window import Ui_MainWindow
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    appData = SettingManager()
+
+    settingManager = SettingManager()
+    settingManager.load()
+
     mainWindow = QMainWindow()
     uiMainwindow = Ui_MainWindow()
-
     uiMainwindow.setupUi(mainWindow)
     mainWindowController = MainWindowController(uiMainwindow)
     mainWindowController.run()
@@ -36,8 +38,7 @@ if __name__ == '__main__':
     # 设置配置文件
     # 如果两个数组全部相同，则返回 -1
     # 将输入路径中的斜杠替换为系统默认的路径分隔符
-    appData.save()
-    appData.load()
+    settingManager.save()
     fileWatchHelper = file_watch_handler.fileWatchHelper()
     fileWatchHelper.startFileWatch()
     mainWindow.show()

@@ -54,7 +54,7 @@ class SettingManager(QObject):
         with self.file_save_lock:
             with open(f'{script_dir}\{g_save_file_name}', 'wb') as f:
                 pickle.dump(self.setting, f, -1)
-                print("save file now")
+                print(f"save file now--{self.setting.projects}")
         return self
 
     def load(self):
