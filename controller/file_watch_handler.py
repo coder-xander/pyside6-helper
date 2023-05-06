@@ -5,7 +5,7 @@ from PySide6.QtCore import QObject
 from watchdog.events import FileSystemEventHandler
 from watchdog import observers
 
-from model.setting_manager import SettingManager
+from model.setting_manager import SettingManager, Project
 
 
 # def syncDirBetweenTwoDir(targetDir, rawDir, reverse=False):
@@ -35,9 +35,10 @@ from model.setting_manager import SettingManager
 #                 shutil.rmtree(root)
 
 
-class fileWatchHandle(FileSystemEventHandler):
-    def __init__(self):
+class FileWatchHandle(FileSystemEventHandler):
+    def __init__(self, project):
         super().__init__()
+        self.project = project
         self.appConfig: SettingManager = SettingManager()
 
     def on_created(self, event):
@@ -46,7 +47,7 @@ class fileWatchHandle(FileSystemEventHandler):
         if event.is_directory:
             print("新文件夹")
             return
-        relNewFilePath = os.path.relpath(newFile, self.appConfig.qt_ui_dir_path)
+        relNewFilePath = os.path.relpath(newFile, self.project.ui_in_dir)
         relNewFilePathDir, relNewFilePathFileName = os.path.split(relNewFilePath)
         # 转换文件名
         relNewFilePathFileNameList: list = relNewFilePathFileName.split(".")
@@ -55,13 +56,13 @@ class fileWatchHandle(FileSystemEventHandler):
         pyfilePath = os.path.normpath(".".join(relNewFilePathFileNameList))
         pyRelPath = os.path.join(relNewFilePathDir, pyfilePath)  # 相对路径
         # 得到目标文件路径
-        pyOutPath = os.path.join(self.appConfig.qt_py_ui_dir_path, pyRelPath)
+        pyOutPath = os.path.join(self.project.ui_out_dir, pyRelPath)
         pyOutDir, pyOutFilename = os.path.split(pyOutPath)
         if not os.path.exists(pyOutDir):
             os.makedirs(pyOutDir)
         # 编译
 
-        result = subprocess.run([self.appConfig.pyside6_uic_path, newFile, "-o", pyOutPath], capture_output=True,
+        result = subprocess.run([self.project.pyside6_uic_path, newFile, "-o", pyOutPath], capture_output=True,
                                 text=True)
         print(result.stdout)
         if result.returncode == 0:
@@ -82,16 +83,33 @@ class fileWatchHandle(FileSystemEventHandler):
         pass
 
 
-class fileWatchHelper(QObject):
-    def __init__(self):
+class FileWatchHelper(QObject):
+    def __init__(self, project: Project):
         self.observer = observers.Observer()
         self.appData: SettingManager = SettingManager()
+        self.fileWatchHandle = FileWatchHandle(project)
+        self.project = project
         pass
 
+    def isProjecUicRunable(self):
+        # 项目配置是不是可以启动uic监控
+        if not os.path.isfile(self.project.pyside6_uic_path):
+            return False, self.project.pyside6_uic_path
+        if not os.path.isdir(self.project.ui_in_dir):
+            return False, self.project.ui_in_dir
+        if not os.path.isdir(self.project.ui_out_dir):
+            return False, self.project.ui_out_dir
+        return True, None
+
     def startFileWatch(self):
-        self.observer = observers.Observer()
-        # self.observer.schedule(fileWatchHandle(), path=self.appData.qt_ui_dir_path, recursive=True)
-        self.observer.start()
+        isRunable, path = self.isProjecUicRunable()
+        if not isRunable:
+            print("启动失败了")
+            return False
+        if self.project.isUicEnable:
+            self.observer = observers.Observer()
+            watch = self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)
+            self.observer.start()
         pass
 
     def stopFileWatch(self):

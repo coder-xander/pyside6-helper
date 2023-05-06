@@ -11,8 +11,10 @@ g_save_file_name = "pyside6-helper-setting.pyh"
 
 class Project:
     def __init__(self):
-        self.in_ui_files_dir = ""
-        self.out_py_files_dir = ""
+        self.ui_in_dir = ""
+        self.ui_out_dir = ""
+        self.qrc_in_dir = ""
+        self.qrc_out_dir = ""
         self.pyside6_uic_path = ""
         self.pyside6_rcc_path = ""
         self.pyside6_assistant_path = ""
@@ -21,17 +23,18 @@ class Project:
         self.logs = []
         self.name = ""
         self.isRunning = False
+        self.isUicEnable = False
+        self.isRccEnable = False
 
     def isVaild(self):
-        res = os.path.isdir(self.in_ui_files_dir) and \
-              os.path.isdir(self.out_py_files_dir) and \
-              os.path.isfile(self.pyside6_linguist_path)and \
-              os.path.isfile(self.pyside6_assistant_path)and\
-              os.path.isfile(self.pyside6_rcc_path)and \
-              os.path.isfile(self.pyside6_uic_path)and \
+        res = os.path.isdir(self.ui_in_dir) and \
+              os.path.isdir(self.ui_out_dir) and \
+              os.path.isfile(self.pyside6_uic_path) and \
               self.name != ""
         return res
         # 配置文件
+
+
 class Setting:
     def __init__(self):
         self.save_timer = None
@@ -47,6 +50,9 @@ class SettingManager(QObject):
         self.file_save_lock = threading.Lock()
         self.setting = Setting()
 
+    def clearProjects(self):
+        self.setting.projects = []
+        self.save()
     def save(self):
         script_path = os.path.abspath(__file__)
         # 获取当前脚本文件所在的目录
@@ -54,7 +60,7 @@ class SettingManager(QObject):
         with self.file_save_lock:
             with open(f'{script_dir}\{g_save_file_name}', 'wb') as f:
                 pickle.dump(self.setting, f, -1)
-                names =[]
+                names = []
                 for p in self.setting.projects:
                     names.append(p.name)
                 print(f"save--{names}")
