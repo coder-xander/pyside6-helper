@@ -1,6 +1,7 @@
 import os
-import pickle
 import threading
+
+import joblib
 from PySide6.QtCore import QTimer
 import orjson
 from PySide6.QtCore import QObject
@@ -58,12 +59,11 @@ class SettingManager(QObject):
         # 获取当前脚本文件所在的目录
         script_dir = os.path.dirname(script_path)
         with self.file_save_lock:
-            with open(f'{script_dir}\{g_save_file_name}', 'wb') as f:
-                pickle.dump(self.setting, f, -1)
-                names = []
-                for p in self.setting.projects:
-                    names.append(p.name)
-                print(f"save--{names}")
+            joblib.dump(self.setting, f'{script_dir}\{g_save_file_name}')
+            names = []
+            for p in self.setting.projects:
+                names.append(p.name)
+            print(f"save--{names}")
         return self
 
     def load(self):
@@ -71,12 +71,11 @@ class SettingManager(QObject):
             script_path = os.path.abspath(__file__)
             # 获取当前脚本文件所在的目录
             script_dir = os.path.dirname(script_path)
-            if not os.path.exists(f'{script_dir}\{g_save_file_name}'):
-                with open(f'{script_dir}\{g_save_file_name}', 'w'):
+            file_path = f'{script_dir}\{g_save_file_name}'
+            if not os.path.exists(file_path):
+                with open(file_path, 'w'):
                     pass
-            with open(f'{script_dir}\{g_save_file_name}', 'rb') as f:
-                self.setting = pickle.load(f)
-                print("load---")
+            self.setting = joblib.load(file_path)
         return self
 
     def startAutoSave(self):

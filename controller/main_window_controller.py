@@ -25,8 +25,15 @@ class MainWindowController:
             item = QListWidgetItem()
             item.setText(p.name)
             item.widgetRef = widget
+            widget.item : QListWidgetItem = item
             self.ui.listWidget.addItem(item)
 
+    def generateQlistwidgetItem(self,projecName):
+        pass
+        item = QListWidgetItem()
+        item.setText(projecName)
+        #
+        return item
     def onListWidgetItemDoubleClicked(self, index: QListWidgetItem):
         # 先看看item代表的widget在stackwidget里面是不是存在的，存在就直接显示 不存在再放上去
         item = self.ui.listWidget.item(index.row())
@@ -55,11 +62,12 @@ class MainWindowController:
                 item = QListWidgetItem()
                 item.setText(project.name)
                 item.widgetRef = widget
+                widget.item = item
                 self.ui.listWidget.addItem(item)
                 pass
 
     def updateProjectFromProjectWidget(self, project: Project, projectWidget: QWidget):
-        ui:Ui_ProjectSetting = projectWidget.ui
+        ui: Ui_ProjectSetting = projectWidget.ui
         project.ui_in_dir = ui.lineEdit_5.text()
         project.ui_out_dir = ui.lineEdit_8.text()
         project.qrc_in_dir = ui.lineEdit_6.text()
@@ -72,6 +80,12 @@ class MainWindowController:
         project.isRccEnable = ui.checkBox_2.isChecked()
         self.settingManager.save()
 
+    #通过name查找Project在ui。listwidget里面的item是不是已经存在
+    def findProjectItemByName(self, name: str):
+        for i in range(0, self.ui.listWidget.count()):
+            if self.ui.listWidget.item(i).text() == name:
+                return self.ui.listWidget.item(i)
+        return None
     def showAddProjectDialog(self):
         self.isAddingProjectFlag = True
         # 初始化一个空widget进行收集项目的信息
@@ -92,10 +106,10 @@ class MainWindowController:
             # 读取界面信息
             project = Project()
             self.updateProjectFromProjectWidget(project, widget)
-            # if not project.isVaild():
-            #     QMessageBox.information(dialog, "info", "Project info is not complete")
-            #     return
-
+            #判断在self.ui.listWidget里面有没有重名的,有的话就不添加
+            if self.findProjectItemByName(project.name) is not None:
+                return
+            #添加到setting里面
             self.settingManager.setting.projects.append(project)
             # 刷新项目列表
             self.refreshProjectList()
@@ -147,30 +161,39 @@ class MainWindowController:
         def onProjectNameChanged():
             # 更改项目的名字
             if not self.isAddingProjectFlag:
-                #TODO 查重
+                #查找self.ui.listwidget里面的item有没有这个widget，但是不要查找自身
+                for index in range(0, self.ui.listWidget.count()):
+                    if self.ui.listWidget.item(index).widgetRef is widget:
+                        continue
+                    if self.ui.listWidget.item(index).text() == widget.ui.lineEdit.text():
+                        QMessageBox.information(widget, "info", "project name is already exist")
+                        widget.ui.lineEdit.setText(project.name)
+                        return
+                        pass
                 self.updateProjectFromProjectWidget(project, widget)
-                item = self.findListWidgetItemByProjectWidget(widget)
-                item.setText(project.name)
+                widget.item.setText(project.name)
                 pass
 
         def runProject(project, widget):
-            #运行项目
+            # 运行项目
             fileWatchHelper = FileWatchHelper(project)
             fileWatchHelper.startFileWatch()
             print("启动uic成功")
             pass
 
-        widget.ui.pushButton_6.clicked.connect(lambda :runProject)
+        widget.ui.pushButton_6.clicked.connect(lambda: runProject)
         widget.ui.lineEdit.editingFinished.connect(onProjectNameChanged)
         widget.ui.lineEdit_5.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
         widget.ui.lineEdit_6.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
+        widget.ui.lineEdit_9.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
         widget.ui.lineEdit_8.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
         widget.ui.lineEdit_12.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
         widget.ui.lineEdit_16.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
         widget.ui.lineEdit_15.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
+        widget.ui.checkBox.stateChanged.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
+        widget.ui.checkBox_2.stateChanged.connect(lambda: self.updateProjectFromProjectWidget(project, widget))
+
         pass
-
-
 
         pass
         return widget

@@ -13,6 +13,7 @@ if __name__ == '__main__':
 
     settingManager = SettingManager()
     # settingManager.clearProjects()
+    # settingManager.save()
     settingManager.load()
     mainWindow = QMainWindow()
     uiMainwindow = Ui_MainWindow()
@@ -27,7 +28,6 @@ if __name__ == '__main__':
     # newProject.qt_py_ui_dir = r"C:\Users\EPR\Documents\xander\github\pyside6-helper\view\qt_py_ui_files"
     # newProject.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
     # mainWindowController.addOneProject(newProject)
-
 
     # myselfDir =  os.path.dirname(script_path)
     # script_path = os.path.abspath(__file__)#脚本所在的路径
