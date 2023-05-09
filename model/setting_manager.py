@@ -14,6 +14,8 @@ class Project:
     def __init__(self):
         self.ui_in_dir = ""
         self.ui_out_dir = ""
+        self.uic_run_paras = ""
+        self.rcc_run_paras = ""
         self.qrc_in_dir = ""
         self.qrc_out_dir = ""
         self.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
@@ -45,6 +47,7 @@ class Project:
             return False, self.ui_out_dir
         return True, None
 
+
 class Setting:
     def __init__(self):
         self.save_timer = None
@@ -63,6 +66,7 @@ class SettingManager(QObject):
     def clearProjects(self):
         self.setting.projects = []
         self.save()
+
     def save(self):
         script_path = os.path.abspath(__file__)
         # 获取当前脚本文件所在的目录
