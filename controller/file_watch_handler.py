@@ -40,14 +40,19 @@ class FileWatchHandle(FileSystemEventHandler):
         super().__init__()
         self.project = project
         self.appConfig: SettingManager = SettingManager()
-
-    def on_created(self, event):
-        print(f"new file {event.src_path}")
-        newFile: str = event.src_path
-        if event.is_directory:
-            print("新文件夹")
-            return
-        relNewFilePath = os.path.relpath(newFile, self.project.ui_in_dir)
+    def uicCompile(self,uiFile,pyFile):
+        result = subprocess.run([self.project.pyside6_uic_path, uiFile, "-o", pyFile], capture_output=True,
+                                text=True)
+        print(result.stdout)
+        if result.returncode == 0:
+            print("编译成功")
+    def isPassFileter(self,path:str):
+        filterList = [".ui"]
+        for i in filterList:
+            if path.endswith(i):
+                return True
+    def getVirtualPathByUiInPathRelatedPyOutPath(self,rawpath):
+        relNewFilePath = os.path.relpath(rawpath, self.project.ui_in_dir)
         relNewFilePathDir, relNewFilePathFileName = os.path.split(relNewFilePath)
         # 转换文件名
         relNewFilePathFileNameList: list = relNewFilePathFileName.split(".")
@@ -57,29 +62,52 @@ class FileWatchHandle(FileSystemEventHandler):
         pyRelPath = os.path.join(relNewFilePathDir, pyfilePath)  # 相对路径
         # 得到目标文件路径
         pyOutPath = os.path.join(self.project.ui_out_dir, pyRelPath)
+        return pyOutPath
+    def on_created(self, event):
+        if not self.isPassFileter(event.src_path):
+            return
+        print(f"create file {event.src_path}")
+        newFile: str = event.src_path
+        if event.is_directory:
+            print("新文件夹")
+            return
+        pyOutPath = self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
         pyOutDir, pyOutFilename = os.path.split(pyOutPath)
         if not os.path.exists(pyOutDir):
             os.makedirs(pyOutDir)
         # 编译
-
-        result = subprocess.run([self.project.pyside6_uic_path, newFile, "-o", pyOutPath], capture_output=True,
-                                text=True)
-        print(result.stdout)
-        if result.returncode == 0:
-            print("编译成功")
+        self.uicCompile(newFile,pyOutPath)
         pass
-
     def on_deleted(self, event):
         print(f"delete file {event.src_path}")
+
+        #在project.ui_out_dir中找到对对应的文件路径，存在就删除
+        path = self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
+        if os.path.exists(path):
+            os.remove(path)
+            print("Reverse direction deleted successfully!")
         pass
 
     def on_moved(self, event):
+        if not  self.isPassFileter(event.dest_path):
+            return
+        print(f"Moved {event.src_path} to {event.dest_path}")
+        pyFilePath = self.getVirtualPathByUiInPathRelatedPyOutPath(event.dest_path)
+        self.uicCompile(event.dest_path, pyFilePath)
+        print("Moved - Recompile ui files successfully!")
         pass
 
     def on_closed(self, event):
+        print(f"closed file {event.src_path}")
         pass
 
     def on_modified(self, event):
+        if not self.isPassFileter(event.src_path):
+            return
+        print(f"modified file {event.src_path}")
+        pyFilePath =  self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
+        self.uicCompile(event.src_path,pyFilePath)
+        print("modified - Recompile ui files successfully!")
         pass
 
 
@@ -91,21 +119,7 @@ class FileWatchHelper(QObject):
         self.project = project
         pass
 
-    def isProjecUicRunable(self):
-        # 项目配置是不是可以启动uic监控
-        if not os.path.isfile(self.project.pyside6_uic_path):
-            return False, self.project.pyside6_uic_path
-        if not os.path.isdir(self.project.ui_in_dir):
-            return False, self.project.ui_in_dir
-        if not os.path.isdir(self.project.ui_out_dir):
-            return False, self.project.ui_out_dir
-        return True, None
-
     def startFileWatch(self):
-        isRunable, path = self.isProjecUicRunable()
-        if not isRunable:
-            print("启动失败了")
-            return False
         if self.project.isUicEnable:
             self.observer = observers.Observer()
             watch = self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)

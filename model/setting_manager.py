@@ -16,7 +16,7 @@ class Project:
         self.ui_out_dir = ""
         self.qrc_in_dir = ""
         self.qrc_out_dir = ""
-        self.pyside6_uic_path = ""
+        self.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
         self.pyside6_rcc_path = ""
         self.pyside6_assistant_path = ""
         self.pyside6_linguist_path = ""
@@ -35,6 +35,15 @@ class Project:
         return res
         # 配置文件
 
+    def isProjecUicRunable(self):
+        # 项目配置是不是可以启动uic监控
+        if not os.path.isfile(self.pyside6_uic_path):
+            return False, self.pyside6_uic_path
+        if not os.path.isdir(self.ui_in_dir):
+            return False, self.ui_in_dir
+        if not os.path.isdir(self.ui_out_dir):
+            return False, self.ui_out_dir
+        return True, None
 
 class Setting:
     def __init__(self):

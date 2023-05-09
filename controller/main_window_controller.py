@@ -2,25 +2,30 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QDialog, QMessageBox, \
     QListWidgetItem, QInputDialog, QLineEdit
 
-from file_watch_handler import FileWatchHelper
+from controller.file_watch_handler import FileWatchHelper
 from model.setting_manager import Project, SettingManager
-from view.qt_py_ui_files.ui_main_window import Ui_MainWindow
+from view.qt_py_ui_files.main_window import Ui_MainWindow
+from view.qt_py_ui_files.setttings_dialog import Ui_settings_dialog
 from view.qt_py_ui_files.ui_project_widget import Ui_ProjectSetting
 
 
-class MainWindowController:
-    def __init__(self, ui):
+class MainWindowController(QMainWindow):
+    def __init__(self):
+        super().__init__()
         # 控制的对象
+        self.ui: Ui_MainWindow = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.show()
         self.settingManager = SettingManager()
-        self.ui: Ui_MainWindow = ui
         # 现在是不是在添加一个新的项目中
         self.isAddingProjectFlag = False
         self.initAllProject2Ui()
-
     def initAllProject2Ui(self):
         self.ui.listWidget.doubleClicked.connect(self.onListWidgetItemDoubleClicked)
         print(self.settingManager.setting.projects)
         for p in self.settingManager.setting.projects:
+            p.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
+            p.isUicEnable = True
             widget = self.project2ProjectWidget(p)
             item = QListWidgetItem()
             item.setText(p.name)
@@ -175,12 +180,18 @@ class MainWindowController:
                 pass
 
         def runProject(project, widget):
-            # 运行项目
-            fileWatchHelper = FileWatchHelper(project)
-            fileWatchHelper.startFileWatch()
-            print("启动uic成功")
-            pass
+            # 运行一个项目
+            isrunable,errorPath =  project.isProjecUicRunable()
+            if isrunable:
+                fileWatchHelper = FileWatchHelper(project)
+                fileWatchHelper.startFileWatch()
+                print("启动uic成功")
+            else:
+                QMessageBox.information(widget,"info","run failed ，project info is not complete！")
+        def onShowSettingPanel():
+            #显示项目的设置面板
 
+            pass
         widget.ui.pushButton_6.clicked.connect(lambda: runProject)
         widget.ui.lineEdit.editingFinished.connect(onProjectNameChanged)
         widget.ui.lineEdit_5.editingFinished.connect(lambda: self.updateProjectFromProjectWidget(project, widget))

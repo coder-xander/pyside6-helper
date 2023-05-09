@@ -6,7 +6,7 @@ import sys
 from controller.main_window_controller import MainWindowController
 from model.setting_manager import SettingManager, Project
 from controller.file_watch_handler import FileWatchHelper
-from view.qt_py_ui_files.ui_main_window import Ui_MainWindow
+from view.qt_py_ui_files.main_window import Ui_MainWindow
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -15,11 +15,8 @@ if __name__ == '__main__':
     # settingManager.clearProjects()
     # settingManager.save()
     settingManager.load()
-    mainWindow = QMainWindow()
-    uiMainwindow = Ui_MainWindow()
-    uiMainwindow.setupUi(mainWindow)
-    mainWindowController = MainWindowController(uiMainwindow)
-    mainWindowController.run()
+    mainWindowController = MainWindowController()
+
 
     # 添加一个项目
     # newProject = Project()
@@ -39,5 +36,6 @@ if __name__ == '__main__':
     # 如果两个数组全部相同，则返回 -1
     # 将输入路径中的斜杠替换为系统默认的路径分隔符
     settingManager.save()
-    mainWindow.show()
+    mainWindowController.show()
+    mainWindowController.run()
     sys.exit(app.exec())
