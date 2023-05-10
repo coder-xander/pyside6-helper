@@ -20,14 +20,14 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QGridLayout, QGroupBox,
     QListWidgetItem, QPushButton, QSizePolicy, QSpacerItem,
     QVBoxLayout, QWidget)
 
-class Ui_ProjectSetting(object):
-    def setupUi(self, ProjectSetting):
-        if not ProjectSetting.objectName():
-            ProjectSetting.setObjectName(u"ProjectSetting")
-        ProjectSetting.resize(682, 410)
-        self.verticalLayout = QVBoxLayout(ProjectSetting)
+class Ui_ProjectWidget(object):
+    def setupUi(self, ProjectWidget):
+        if not ProjectWidget.objectName():
+            ProjectWidget.setObjectName(u"ProjectWidget")
+        ProjectWidget.resize(682, 410)
+        self.verticalLayout = QVBoxLayout(ProjectWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.widget_3 = QWidget(ProjectSetting)
+        self.widget_3 = QWidget(ProjectWidget)
         self.widget_3.setObjectName(u"widget_3")
         self.horizontalLayout_6 = QHBoxLayout(self.widget_3)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
@@ -52,6 +52,20 @@ class Ui_ProjectSetting(object):
 
         self.horizontalLayout_6.addWidget(self.pushButton_9)
 
+        self.horizontalSpacer_16 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_6.addItem(self.horizontalSpacer_16)
+
+        self.pushButton_10 = QPushButton(self.widget_3)
+        self.pushButton_10.setObjectName(u"pushButton_10")
+
+        self.horizontalLayout_6.addWidget(self.pushButton_10)
+
+        self.pushButton_12 = QPushButton(self.widget_3)
+        self.pushButton_12.setObjectName(u"pushButton_12")
+
+        self.horizontalLayout_6.addWidget(self.pushButton_12)
+
         self.horizontalSpacer_14 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_14)
@@ -59,7 +73,7 @@ class Ui_ProjectSetting(object):
 
         self.verticalLayout.addWidget(self.widget_3)
 
-        self.groupBox = QGroupBox(ProjectSetting)
+        self.groupBox = QGroupBox(ProjectWidget)
         self.groupBox.setObjectName(u"groupBox")
         self.gridLayout = QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -166,7 +180,7 @@ class Ui_ProjectSetting(object):
 
         self.verticalLayout.addWidget(self.groupBox)
 
-        self.groupBox_2 = QGroupBox(ProjectSetting)
+        self.groupBox_2 = QGroupBox(ProjectWidget)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.gridLayout_2 = QGridLayout(self.groupBox_2)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
@@ -251,7 +265,7 @@ class Ui_ProjectSetting(object):
 
         self.verticalLayout.addWidget(self.groupBox_2)
 
-        self.listWidget_2 = QListWidget(ProjectSetting)
+        self.listWidget_2 = QListWidget(ProjectWidget)
         self.listWidget_2.setObjectName(u"listWidget_2")
 
         self.verticalLayout.addWidget(self.listWidget_2)
@@ -261,40 +275,42 @@ class Ui_ProjectSetting(object):
         self.verticalLayout.addItem(self.verticalSpacer)
 
 
-        self.retranslateUi(ProjectSetting)
+        self.retranslateUi(ProjectWidget)
 
-        QMetaObject.connectSlotsByName(ProjectSetting)
+        QMetaObject.connectSlotsByName(ProjectWidget)
     # setupUi
 
-    def retranslateUi(self, ProjectSetting):
-        ProjectSetting.setWindowTitle(QCoreApplication.translate("ProjectSetting", u"Form", None))
-        self.pushButton_32.setText(QCoreApplication.translate("ProjectSetting", u"running", None))
-        self.pushButton_6.setText(QCoreApplication.translate("ProjectSetting", u"run", None))
-        self.pushButton_9.setText(QCoreApplication.translate("ProjectSetting", u"setting", None))
-        self.groupBox.setTitle(QCoreApplication.translate("ProjectSetting", u"Dir Observers", None))
-        self.label_16.setText(QCoreApplication.translate("ProjectSetting", u"rcc", None))
-        self.pushButton_22.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.label_14.setText(QCoreApplication.translate("ProjectSetting", u"output", None))
-        self.label_4.setText(QCoreApplication.translate("ProjectSetting", u"uic", None))
-        self.pushButton_21.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_11.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_7.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.label_19.setText(QCoreApplication.translate("ProjectSetting", u"output", None))
-        self.pushButton_26.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_29.setText(QCoreApplication.translate("ProjectSetting", u"error", None))
-        self.pushButton_27.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_28.setText(QCoreApplication.translate("ProjectSetting", u"invalid", None))
+    def retranslateUi(self, ProjectWidget):
+        ProjectWidget.setWindowTitle(QCoreApplication.translate("ProjectWidget", u"Form", None))
+        self.pushButton_32.setText(QCoreApplication.translate("ProjectWidget", u"running", None))
+        self.pushButton_6.setText(QCoreApplication.translate("ProjectWidget", u"run", None))
+        self.pushButton_9.setText(QCoreApplication.translate("ProjectWidget", u"setting", None))
+        self.pushButton_10.setText(QCoreApplication.translate("ProjectWidget", u"ok", None))
+        self.pushButton_12.setText(QCoreApplication.translate("ProjectWidget", u"cancel", None))
+        self.groupBox.setTitle(QCoreApplication.translate("ProjectWidget", u"Dir Observers", None))
+        self.label_16.setText(QCoreApplication.translate("ProjectWidget", u"rcc", None))
+        self.pushButton_22.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.label_14.setText(QCoreApplication.translate("ProjectWidget", u"output", None))
+        self.label_4.setText(QCoreApplication.translate("ProjectWidget", u"uic", None))
+        self.pushButton_21.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_11.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_7.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.label_19.setText(QCoreApplication.translate("ProjectWidget", u"output", None))
+        self.pushButton_26.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_29.setText(QCoreApplication.translate("ProjectWidget", u"error", None))
+        self.pushButton_27.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_28.setText(QCoreApplication.translate("ProjectWidget", u"invalid", None))
         self.checkBox.setText("")
         self.checkBox_2.setText("")
-        self.groupBox_2.setTitle(QCoreApplication.translate("ProjectSetting", u"Tools", None))
-        self.label_20.setText(QCoreApplication.translate("ProjectSetting", u"designer", None))
-        self.pushButton_48.setText(QCoreApplication.translate("ProjectSetting", u"start", None))
-        self.pushButton_49.setText(QCoreApplication.translate("ProjectSetting", u"start", None))
-        self.pushButton_43.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_45.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.label_23.setText(QCoreApplication.translate("ProjectSetting", u"qt assistant ", None))
-        self.pushButton_46.setText(QCoreApplication.translate("ProjectSetting", u"...", None))
-        self.pushButton_44.setText(QCoreApplication.translate("ProjectSetting", u"start", None))
-        self.label_25.setText(QCoreApplication.translate("ProjectSetting", u"linguist", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("ProjectWidget", u"Tools", None))
+        self.label_20.setText(QCoreApplication.translate("ProjectWidget", u"designer", None))
+        self.pushButton_48.setText(QCoreApplication.translate("ProjectWidget", u"start", None))
+        self.pushButton_49.setText(QCoreApplication.translate("ProjectWidget", u"start", None))
+        self.pushButton_43.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_45.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.label_23.setText(QCoreApplication.translate("ProjectWidget", u"qt assistant ", None))
+        self.pushButton_46.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
+        self.pushButton_44.setText(QCoreApplication.translate("ProjectWidget", u"start", None))
+        self.label_25.setText(QCoreApplication.translate("ProjectWidget", u"linguist", None))
     # retranslateUi
 

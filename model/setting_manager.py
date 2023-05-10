@@ -1,15 +1,11 @@
 import os
 import threading
-
 import joblib
 from PySide6.QtCore import QTimer
-import orjson
 from PySide6.QtCore import QObject
 import tools
 
 g_save_file_name = "pyside6-helper-setting.pyh"
-
-
 class Project:
     def __init__(self):
         self.ui_in_dir = ""
@@ -80,6 +76,7 @@ class SettingManager(QObject):
         return self
 
     def load(self):
+        print("load setting file")
         with self.file_save_lock:
             script_path = os.path.abspath(__file__)
             # 获取当前脚本文件所在的目录

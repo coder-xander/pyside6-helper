@@ -1,10 +1,14 @@
+from _ast import Global
+
 from PySide6.QtCore import QFile, QFileInfo
-from PySide6.QtWidgets import QDialog, QInputDialog, QFileDialog
+from PySide6.QtWidgets import QDialog, QInputDialog, QFileDialog, QMessageBox
+
+from file_watch_handler import FileWatchHelper
 
 from view.qt_py_ui_files.setttings_dialog import Ui_settings_dialog
 
 
-class SettingDialogController(QDialog):
+class SettingDialog(QDialog):
     def __init__(self,project):
         super().__init__()
         self.project = project
@@ -12,6 +16,17 @@ class SettingDialogController(QDialog):
         dialog = QDialog()
         self.ui.setupUi(self)
         self.initConnects()
+
+    def runProject(self):
+        # 运行一个项目
+        isrunable, errorPath = self.project.isProjecUicRunable()
+        if isrunable:
+            fileWatchHelper = FileWatchHelper(self.project)
+            fileWatchHelper.startFileWatch()
+            print("启动uic成功")
+        else:
+            QMessageBox.information(self, "info", "run failed ，project info is not complete！")
+
     def outputInfoToProject(self,project):
         project.pyside6_uic_path = self.ui.lineEdit_4.text()
         project.pyside6_rcc_path = self.ui.lineEdit_8.text()
@@ -43,3 +58,4 @@ class SettingDialogController(QDialog):
             self.outputInfoToProject(self.project)
             self.accept()
         self.ui.pushButton_18.clicked.connect(ok)
+
