@@ -56,11 +56,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.pushButton_35 = QPushButton(self.widget)
-        self.pushButton_35.setObjectName(u"pushButton_35")
-        self.pushButton_35.setMaximumSize(QSize(16777215, 16777215))
+        self.newProjectBtn = QPushButton(self.widget)
+        self.newProjectBtn.setObjectName(u"newProjectBtn")
+        self.newProjectBtn.setMaximumSize(QSize(16777215, 16777215))
 
-        self.horizontalLayout.addWidget(self.pushButton_35)
+        self.horizontalLayout.addWidget(self.newProjectBtn)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -81,7 +81,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 845, 21))
+        self.menuBar.setGeometry(QRect(0, 0, 845, 22))
         self.menuproject = QMenu(self.menuBar)
         self.menuproject.setObjectName(u"menuproject")
         self.menuhelp = QMenu(self.menuBar)
@@ -111,7 +111,7 @@ class Ui_MainWindow(object):
         self.actionimport_and_export.setText(QCoreApplication.translate("MainWindow", u"import and export", None))
         self.actionexit.setText(QCoreApplication.translate("MainWindow", u"exit", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"projects", None))
-        self.pushButton_35.setText(QCoreApplication.translate("MainWindow", u"new", None))
+        self.newProjectBtn.setText(QCoreApplication.translate("MainWindow", u"new", None))
         self.menuproject.setTitle(QCoreApplication.translate("MainWindow", u"application", None))
         self.menuhelp.setTitle(QCoreApplication.translate("MainWindow", u"help", None))
     # retranslateUi

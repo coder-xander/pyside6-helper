@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QDialog, QMessageBox, \
     QListWidgetItem, QInputDialog, QLineEdit
 
-from controller.file_watch_handler import FileWatchHelper
 from controller.setting_dialog import SettingDialog
 from model.setting_manager import Project, SettingManager
 from project_widget import ProjectWidget
@@ -10,7 +10,7 @@ from tools import GlobalValues
 from view.qt_py_ui_files.main_window import Ui_MainWindow
 from view.qt_py_ui_files.setttings_dialog import Ui_settings_dialog
 from view.qt_py_ui_files.project_widget import Ui_ProjectWidget
-
+import resource.app_resources
 
 class MainWindow(QMainWindow):
 #单例
@@ -35,9 +35,10 @@ class MainWindow(QMainWindow):
 
 
     def init(self):
+        self.ui.newProjectBtn.setIcon(QIcon(":pngs/xinjian.png"))
         GlobalValues.settingManager.load()
         self.ui.listWidget.doubleClicked.connect(self.onListWidgetItemDoubleClicked)
-        self.ui.pushButton_35.clicked.connect(self.showAddProjectDialog)
+        self.ui.newProjectBtn.clicked.connect(self.showAddProjectDialog)
         print(GlobalValues.settingManager.setting.projects)
         #加载所有的项目
         for project in GlobalValues.settingManager.setting.projects:

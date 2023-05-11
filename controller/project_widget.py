@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QWidget, QMessageBox, QListWidgetItem, QDialog, QListWidget
 
 import tools
-from file_watch_handler import FileWatchHelper
+
+from file_watchers.uic_file_handle_watch import UicFileWatchHandle
 from setting_dialog import SettingDialog
 from view.qt_py_ui_files.project_widget import Ui_ProjectWidget
 
@@ -45,12 +48,12 @@ class ProjectWidget(QWidget):
         self.item.setText(self.project.name)
         GlobalValues.mainwindow.ui.listWidget.addItem(self.item)
         GlobalValues.mainwindow.isAddingProject = False
-        self.close()
         GlobalValues.mainwindow.ui.stackedWidget.addWidget(self)
         GlobalValues.mainwindow.ui.stackedWidget.setCurrentWidget(self)
         self.setNewProjectMode(False)
         GlobalValues.settingManager.save()
         self.item.setSelected(True)
+        self.close()
         pass
     def cancelNewProject(self):
         #取消新建一个项目
@@ -73,22 +76,19 @@ class ProjectWidget(QWidget):
         # 显示项目的设置面板
         settingDialog = SettingDialog(self.project)
         settingDialog.move(QCursor.pos())
-        res = settingDialog.exec()
-        if res == QDialog.Accepted:
-            #TODO 设置面板的设置之后
-            pass
+        settingDialog.exec()
     def runProject(self):
         # 运行项目
         if self.project.isUicEnable:
-            fileWatchHelper = FileWatchHelper(self.project)
-            fileWatchHelper.startUicWatch()
-            fileWatchHelper.fileWatchHandle.signal_Log.connect(self.log)
+            fileWatchHelper = UicFileWatchHandle(self.project)
+            fileWatchHelper.connectLog(self.log)
+            fileWatchHelper.run()
             self.log("uic watcher run successfully!")
-        if self.project.isRccEnable:
-            fileWatchHelper = FileWatchHelper(self.project)
-            fileWatchHelper.startUicWatch()
-            fileWatchHelper.fileWatchHandle.signal_Log.connect(self.log)
-            self.log("rcc watcher run successfully!")
+        # if self.project.isRccEnable:
+        #     fileWatchHelper = FileWatchHelper(self.project)
+        #     fileWatchHelper.startUicWatch()
+        #     fileWatchHelper.fileWatchHandle.signal_Log.connect(self.log)
+        #     self.log("rcc watcher run successfully!")
         pass
     def onProjectNameChanged(self):
         print(self.project)
@@ -136,7 +136,8 @@ class ProjectWidget(QWidget):
         GlobalValues.settingManager.save()
 
     def log(self,msg):
-        while self.ui.listWidget_2.count()>100:
+        msg =  datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " " + msg
+        while self.ui.listWidget_2.count() > 100:
             self.ui.listWidget_2.removeItemWidget(self.ui.listWidget_2.item(0))
             self.project.logs.remove(self.project.logs[0])
         self.ui.listWidget_2.addItem(msg)

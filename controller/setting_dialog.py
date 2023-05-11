@@ -3,7 +3,6 @@ from _ast import Global
 from PySide6.QtCore import QFile, QFileInfo
 from PySide6.QtWidgets import QDialog, QInputDialog, QFileDialog, QMessageBox
 
-from file_watch_handler import FileWatchHelper
 from tools import GlobalValues
 
 from view.qt_py_ui_files.setttings_dialog import Ui_settings_dialog

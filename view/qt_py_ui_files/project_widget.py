@@ -299,6 +299,7 @@ class Ui_ProjectWidget(object):
         self.label_16.setText(QCoreApplication.translate("ProjectWidget", u"rcc", None))
         self.pushButton_22.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
         self.label_14.setText(QCoreApplication.translate("ProjectWidget", u"output", None))
+        self.lineEdit_5.setText("")
         self.label_4.setText(QCoreApplication.translate("ProjectWidget", u"uic", None))
         self.lineEdit_8.setText("")
         self.pushButton_21.setText(QCoreApplication.translate("ProjectWidget", u"...", None))
