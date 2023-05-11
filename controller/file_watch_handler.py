@@ -1,7 +1,7 @@
 import os.path
 import subprocess
 
-from PySide6.QtCore import QObject
+from PySide6.QtCore import QObject, Signal
 from watchdog.events import FileSystemEventHandler
 from watchdog import observers
 
@@ -35,27 +35,31 @@ from model.setting_manager import SettingManager, Project
 #                 shutil.rmtree(root)
 
 
-class FileWatchHandle(FileSystemEventHandler):
-    def __init__(self, project,projectWidget):
+class FileWatchHandle(FileSystemEventHandler, QObject):
+    # 触发信号打印日志
+    signal_Log = Signal(str)
+
+    def __init__(self, project):
         super().__init__()
         self.project = project
-        self.projectWidget = projectWidget
         self.appConfig: SettingManager = SettingManager()
+        # 信号
 
-    def uicCompile(self,uiFile,pyFile):
+    def uicCompile(self, uiFile, pyFile):
         result = subprocess.run([self.project.pyside6_uic_path, uiFile, "-o", pyFile], capture_output=True,
                                 text=True)
         print(result.stdout)
-        dirname ,filename =  os.path.split(uiFile)
+        dirname, filename = os.path.split(uiFile)
         if result.returncode == 0:
-            self.projectWidget.log(f"compile {filename} done.")
+            self.signal_Log.emit(f"compile {filename} done.")
 
-    def isPassFileter(self,path:str):
+    def isPassFileter(self, path: str):
         filterList = [".ui"]
         for i in filterList:
             if path.endswith(i):
                 return True
-    def getVirtualPathByUiInPathRelatedPyOutPath(self,rawpath):
+
+    def getVirtualPathByUiInPathRelatedPyOutPath(self, rawpath):
         relNewFilePath = os.path.relpath(rawpath, self.project.ui_in_dir)
         relNewFilePathDir, relNewFilePathFileName = os.path.split(relNewFilePath)
         # 转换文件名
@@ -67,6 +71,7 @@ class FileWatchHandle(FileSystemEventHandler):
         # 得到目标文件路径
         pyOutPath = os.path.join(self.project.ui_out_dir, pyRelPath)
         return pyOutPath
+
     def on_created(self, event):
         if not self.isPassFileter(event.src_path):
             return
@@ -80,12 +85,13 @@ class FileWatchHandle(FileSystemEventHandler):
         if not os.path.exists(pyOutDir):
             os.makedirs(pyOutDir)
         # 编译
-        self.uicCompile(newFile,pyOutPath)
+        self.uicCompile(newFile, pyOutPath)
         pass
+
     def on_deleted(self, event):
         print(f"delete file {event.src_path}")
 
-        #在project.ui_out_dir中找到对对应的文件路径，存在就删除
+        # 在project.ui_out_dir中找到对对应的文件路径，存在就删除
         path = self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
         if os.path.exists(path):
             os.remove(path)
@@ -93,7 +99,7 @@ class FileWatchHandle(FileSystemEventHandler):
         pass
 
     def on_moved(self, event):
-        if not  self.isPassFileter(event.dest_path):
+        if not self.isPassFileter(event.dest_path):
             return
         print(f"Moved {event.src_path} to {event.dest_path}")
         pyFilePath = self.getVirtualPathByUiInPathRelatedPyOutPath(event.dest_path)
@@ -109,31 +115,31 @@ class FileWatchHandle(FileSystemEventHandler):
         if not self.isPassFileter(event.src_path):
             return
         print(f"modified file {event.src_path}")
-        pyFilePath =  self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
-        self.uicCompile(event.src_path,pyFilePath)
+        pyFilePath = self.getVirtualPathByUiInPathRelatedPyOutPath(event.src_path)
+        self.uicCompile(event.src_path, pyFilePath)
         print("modified - Recompile ui files successfully!")
         pass
 
 
 class FileWatchHelper(QObject):
-    def __init__(self, project: Project,projectWidget):
+    def __init__(self, project: Project):
         self.observer = observers.Observer()
         self.appData: SettingManager = SettingManager()
-        self.fileWatchHandle = FileWatchHandle(project,projectWidget)
+        self.fileWatchHandle = FileWatchHandle(project)
         self.project = project
         pass
 
-    def startFileWatch(self):
+    def startUicWatch(self):
         self.observer = observers.Observer()
-        watch = self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)
+        self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)
         self.observer.start()
 
-    def stopFileWatch(self):
-        self.observer.stop()
-        self.observer.join()
+    def startRccWatch(self):
+
         pass
 
-    def restartFileWatch(self):
-        self.startFileWatch()
-        self.stopFileWatch()
-        pass
+    # def stopFileWatch(self):
+    #     self.observer.stop()
+    #     self.observer.join()
+    #     pass
+

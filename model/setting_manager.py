@@ -14,7 +14,7 @@ class Project:
         self.rcc_run_paras = ""
         self.qrc_in_dir = ""
         self.qrc_out_dir = ""
-        self.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
+        self.pyside6_uic_path = ""
         self.pyside6_rcc_path = ""
         self.pyside6_assistant_path = ""
         self.pyside6_linguist_path = ""
@@ -51,7 +51,6 @@ class Setting:
         self.projects: list = []
 
 
-@tools.singleton
 class SettingManager(QObject):
     # 线程安全的单例
     def __init__(self):

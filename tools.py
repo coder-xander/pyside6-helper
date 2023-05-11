@@ -1,19 +1,13 @@
 import os
 from pathlib import Path
 import threading
-
-#单例模式注解
-def singleton(cls):
-    instances = {}
-    lock = threading.Lock()
-
-    def get_instance(*args, **kwargs):
-        with lock:
-            if cls not in instances:
-                instances[cls] = cls(*args, **kwargs)
-            return instances[cls]
-
-    return get_instance
+class GlobalValues:
+    mainwindow = None
+    settingManager = None
+    singletonLock =  threading.Lock()
+    def __getattribute__(self, item):
+        with GlobalValues.singletonLock:
+            return item
 
 def find_file_by_filename(filename):
     paths = []

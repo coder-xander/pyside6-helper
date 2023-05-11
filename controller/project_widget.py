@@ -1,11 +1,14 @@
+from PySide6.QtCore import Signal
+from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QWidget, QMessageBox, QListWidgetItem, QDialog, QListWidget
 
+import tools
 from file_watch_handler import FileWatchHelper
 from setting_dialog import SettingDialog
-from view.qt_py_ui_files.ui_project_widget import Ui_ProjectWidget
+from view.qt_py_ui_files.project_widget import Ui_ProjectWidget
 
 from model.setting_manager import Setting, Project, SettingManager
-
+from tools import GlobalValues
 
 #还没用到这个文件袋额
 class ProjectWidget(QWidget):
@@ -14,11 +17,9 @@ class ProjectWidget(QWidget):
         self.ui = Ui_ProjectWidget()
         self.ui.setupUi(self)
         self.project = project
-        self.settingManager = SettingManager()
         self.item :QListWidgetItem = QListWidgetItem()
         self.item.widget = self
         self.setNewProjectMode(False)
-        self.mainwindow = None
 
     def initConnects(self):
         #初始化信号槽
@@ -40,15 +41,15 @@ class ProjectWidget(QWidget):
         print("applyNewProject")
         #新建一个项目
         self.refreshProjectByUiAndSave()
-        self.settingManager.setting.projects.append(self.project)
+        GlobalValues.settingManager.setting.projects.append(self.project)
         self.item.setText(self.project.name)
-        self.mainwindow.ui.listWidget.addItem(self.item)
-        self.mainwindow.isAddingProject = False
+        GlobalValues.mainwindow.ui.listWidget.addItem(self.item)
+        GlobalValues.mainwindow.isAddingProject = False
         self.close()
-        self.mainwindow.ui.stackedWidget.addWidget(self)
-        self.mainwindow.ui.stackedWidget.setCurrentWidget(self)
+        GlobalValues.mainwindow.ui.stackedWidget.addWidget(self)
+        GlobalValues.mainwindow.ui.stackedWidget.setCurrentWidget(self)
         self.setNewProjectMode(False)
-        self.settingManager.save()
+        GlobalValues.settingManager.save()
         self.item.setSelected(True)
         pass
     def cancelNewProject(self):
@@ -71,6 +72,7 @@ class ProjectWidget(QWidget):
     def onShowSettingPanel(self):
         # 显示项目的设置面板
         settingDialog = SettingDialog(self.project)
+        settingDialog.move(QCursor.pos())
         res = settingDialog.exec()
         if res == QDialog.Accepted:
             #TODO 设置面板的设置之后
@@ -78,26 +80,32 @@ class ProjectWidget(QWidget):
     def runProject(self):
         # 运行项目
         if self.project.isUicEnable:
-            fileWatchHelper = FileWatchHelper(self.project,self)
-            fileWatchHelper.startFileWatch()
+            fileWatchHelper = FileWatchHelper(self.project)
+            fileWatchHelper.startUicWatch()
+            fileWatchHelper.fileWatchHandle.signal_Log.connect(self.log)
             self.log("uic watcher run successfully!")
+        if self.project.isRccEnable:
+            fileWatchHelper = FileWatchHelper(self.project)
+            fileWatchHelper.startUicWatch()
+            fileWatchHelper.fileWatchHandle.signal_Log.connect(self.log)
+            self.log("rcc watcher run successfully!")
         pass
     def onProjectNameChanged(self):
         print(self.project)
         # 当项目的名字改变的时候
-        if not self.mainwindow.isAddingProject:
+        if not GlobalValues.mainwindow.isAddingProject:
             # 查找self.ui.listwidget里面的item有没有这个widget，但是不要查找自身
-            for index in range(0, self.mainwindow.ui.listWidget.count()):
-                if self.mainwindow.ui.listWidget.item(index).widget is self:
+            for index in range(0, GlobalValues.mainwindow.ui.listWidget.count()):
+                if GlobalValues.mainwindow.ui.listWidget.item(index).widget is self:
                     continue
-                if self.mainwindow.ui.listWidget.item(index).text() == self.ui.lineEdit.text():
+                if GlobalValues.mainwindow.ui.listWidget.item(index).text() == self.ui.lineEdit.text():
                     QMessageBox.information(self, "info", "project name is already exist")
                     self.ui.lineEdit.setText(self.project.name)
                     pass
                 else:
                     self.project.name = self.ui.lineEdit.text()
                     self.item.setText(self.project.name)
-                    self.settingManager.save()
+                    GlobalValues.settingManager.save()
                     pass
 
     def refreshUiByProjcet(self):
@@ -125,7 +133,7 @@ class ProjectWidget(QWidget):
         self.project.name = self.ui.lineEdit.text()
         self.project.isUicEnable = self.ui.checkBox.isChecked()
         self.project.isRccEnable = self.ui.checkBox_2.isChecked()
-        self.settingManager.save()
+        GlobalValues.settingManager.save()
 
     def log(self,msg):
         while self.ui.listWidget_2.count()>100:
