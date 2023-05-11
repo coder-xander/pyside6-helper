@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         self.actionsetting.setText(QCoreApplication.translate("MainWindow", u"setting", None))
         self.actionimport_and_export.setText(QCoreApplication.translate("MainWindow", u"import and export", None))
         self.actionexit.setText(QCoreApplication.translate("MainWindow", u"exit", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"bbbb", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"projects", None))
         self.pushButton_35.setText(QCoreApplication.translate("MainWindow", u"new", None))
         self.menuproject.setTitle(QCoreApplication.translate("MainWindow", u"application", None))
         self.menuhelp.setTitle(QCoreApplication.translate("MainWindow", u"help", None))

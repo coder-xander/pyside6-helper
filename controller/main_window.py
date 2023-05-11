@@ -43,8 +43,6 @@ class MainWindow(QMainWindow):
         print(self.settingManager.setting.projects)
         #加载所有的项目
         for project in self.settingManager.setting.projects:
-            project.pyside6_uic_path = r"C:\Users\EPR\.virtualenvs\pyside6-helper-pP3pfM4F\Scripts\pyside6-uic.exe"
-            project.isUicEnable = True
             widget = ProjectWidget(project)
             widget.refreshUiByProjcet()
             widget.initConnects()

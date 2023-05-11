@@ -1,8 +1,10 @@
 import copy
 
+import qdarkstyle
+from PySide6 import QtCore
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 import sys
-
 from main_window import MainWindow
 from model.setting_manager import SettingManager, Project
 from controller.file_watch_handler import FileWatchHelper
@@ -13,9 +15,13 @@ if __name__ == '__main__':
     # SettingManager().clearProjects()
     # SettingManager().save()
     mainwindow = MainWindow()
+    mainwindow.setWindowTitle("pyside helper")
+    # mainwindow.setWindowIconText(QIcon())
+    # mainwindow.show()
+    # mainwindow.raise_()
     mainwindow.show()
-    mainwindow.raise_()
-    sys.exit(app.exec())
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
+    app.exec_()
     # 添加一个项目
     # newProject = Project()
     # newProject.name = "auto c"

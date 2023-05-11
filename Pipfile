@@ -11,6 +11,7 @@ watchdog = "*"
 pathlib = "*"
 pywin32 = "*"
 joblib = "*"
+qdarkstyle = "*"
 
 [dev-packages]
 

@@ -7,26 +7,33 @@ from file_watch_handler import FileWatchHelper
 
 from view.qt_py_ui_files.setttings_dialog import Ui_settings_dialog
 
-
+#动态创建的setting dialog
 class SettingDialog(QDialog):
     def __init__(self,project):
         super().__init__()
         self.project = project
         self.ui = Ui_settings_dialog()
-        dialog = QDialog()
         self.ui.setupUi(self)
-        self.initConnects()
+        self.init()
 
-    def runProject(self):
-        # 运行一个项目
-        isrunable, errorPath = self.project.isProjecUicRunable()
-        if isrunable:
-            fileWatchHelper = FileWatchHelper(self.project)
-            fileWatchHelper.startFileWatch()
-            print("启动uic成功")
-        else:
-            QMessageBox.information(self, "info", "run failed ，project info is not complete！")
+    def init(self):
+        self.refreshUiByProject()
+        def getPath(lineEdit):
+            filePath, _ = QFileDialog.getOpenFileName(self, "select your file")
+            print(filePath)
+            self.ui.lineEdit_4.setText(filePath)
+            print(_)
+        self.ui.pushButton_27.clicked.connect(lambda: getPath(self.ui.lineEdit_4))
+        self.ui.pushButton_28.clicked.connect(lambda: getPath(self.ui.lineEdit_8))
+        self.ui.pushButton_29.clicked.connect(lambda: getPath(self.ui.lineEdit_5))
+        self.ui.pushButton_30.clicked.connect(lambda: getPath(self.ui.lineEdit_6))
+        self.ui.pushButton_31.clicked.connect(lambda: getPath(self.ui.lineEdit_7))
 
+        def ok():
+            self.refreshProjectByUi(self.project)
+            self.accept()
+
+        self.ui.pushButton_18.clicked.connect(ok)
     def refreshProjectByUi(self, project):
         project.pyside6_uic_path = self.ui.lineEdit_4.text()
         project.pyside6_rcc_path = self.ui.lineEdit_8.text()
@@ -43,20 +50,10 @@ class SettingDialog(QDialog):
         paras = " ".join(rccParaList)
         project.uic_run_paras = paras
         pass
-    def initConnects(self):
+    def refreshUiByProject(self):
         pass
-        def getPath(lineEdit):
-            filePath ,_  = QFileDialog.getOpenFileName(self,"select your file")
-            print(filePath)
-            self.ui.lineEdit_4.setText(filePath)
-            print(_)
-        self.ui.pushButton_27.clicked.connect(lambda :getPath(self.ui.lineEdit_4))
-        self.ui.pushButton_28.clicked.connect(lambda :getPath(self.ui.lineEdit_8))
-        self.ui.pushButton_29.clicked.connect(lambda :getPath(self.ui.lineEdit_5))
-        self.ui.pushButton_30.clicked.connect(lambda :getPath(self.ui.lineEdit_6))
-        self.ui.pushButton_31.clicked.connect(lambda :getPath(self.ui.lineEdit_7))
-        def ok():
-            self.refreshProjectByUi(self.project)
-            self.accept()
-        self.ui.pushButton_18.clicked.connect(ok)
-
+        self.ui.lineEdit_4.setText(self.project.pyside6_uic_path)
+        self.ui.lineEdit_8.setText(self.project.pyside6_rcc_path)
+        self.ui.lineEdit_6.setText(self.project.pyside6_designer_path)
+        self.ui.lineEdit_5.setText(self.project.pyside6_linguist_path)
+        self.ui.lineEdit_7.setText(self.project.pyside6_assistant_path)

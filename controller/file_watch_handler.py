@@ -36,16 +36,20 @@ from model.setting_manager import SettingManager, Project
 
 
 class FileWatchHandle(FileSystemEventHandler):
-    def __init__(self, project):
+    def __init__(self, project,projectWidget):
         super().__init__()
         self.project = project
+        self.projectWidget = projectWidget
         self.appConfig: SettingManager = SettingManager()
+
     def uicCompile(self,uiFile,pyFile):
         result = subprocess.run([self.project.pyside6_uic_path, uiFile, "-o", pyFile], capture_output=True,
                                 text=True)
         print(result.stdout)
+        dirname ,filename =  os.path.split(uiFile)
         if result.returncode == 0:
-            print("编译成功")
+            self.projectWidget.log(f"compile {filename} done.")
+
     def isPassFileter(self,path:str):
         filterList = [".ui"]
         for i in filterList:
@@ -112,10 +116,10 @@ class FileWatchHandle(FileSystemEventHandler):
 
 
 class FileWatchHelper(QObject):
-    def __init__(self, project: Project):
+    def __init__(self, project: Project,projectWidget):
         self.observer = observers.Observer()
         self.appData: SettingManager = SettingManager()
-        self.fileWatchHandle = FileWatchHandle(project)
+        self.fileWatchHandle = FileWatchHandle(project,projectWidget)
         self.project = project
         pass
 

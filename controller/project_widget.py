@@ -78,7 +78,7 @@ class ProjectWidget(QWidget):
     def runProject(self):
         # 运行项目
         if self.project.isUicEnable:
-            fileWatchHelper = FileWatchHelper(self.project)
+            fileWatchHelper = FileWatchHelper(self.project,self)
             fileWatchHelper.startFileWatch()
             self.log("uic watcher run successfully!")
         pass
@@ -128,8 +128,8 @@ class ProjectWidget(QWidget):
         self.settingManager.save()
 
     def log(self,msg):
-        if self.ui.listWidget_2.count()>100:
-            self.ui.listWidget_2.removeItemWidget(self.ui.listWidget_2.item(self.ui.listWidget_2.count()-1))
-            self.project.logs.remove(self.project.logs[-1])
-        self.ui.listWidget_2.insertItem(0, QListWidgetItem(msg))
+        while self.ui.listWidget_2.count()>100:
+            self.ui.listWidget_2.removeItemWidget(self.ui.listWidget_2.item(0))
+            self.project.logs.remove(self.project.logs[0])
+        self.ui.listWidget_2.addItem(msg)
         self.project.logs.append(msg)
