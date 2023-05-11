@@ -54,16 +54,10 @@ class MainWindow(QMainWindow):
     def onListWidgetItemDoubleClicked(self, index: QListWidgetItem):
         # 先看看item代表的widget在stackwidget里面是不是存在的，存在就直接显示 不存在再放上去
         item = self.ui.listWidget.item(index.row())
-        print(item.text())
-        isExsit = False
-        for i in range(0, self.ui.stackedWidget.count()):
-            widgetUi: Ui_ProjectWidget = self.ui.stackedWidget.widget(i).ui
-            if widgetUi.lineEdit.text() == item.text():
-                isExsit = True
-                break
-        if not isExsit:
-            self.ui.stackedWidget.addWidget(item.widget)
-            self.ui.stackedWidget.setCurrentWidget(item.widget)
+        print(f"clicked! {item.text()}")
+        self.ui.stackedWidget.addWidget(item.widget)
+        self.ui.stackedWidget.setCurrentWidget(item.widget)
+
 
 
     def findListWidgetItemByProjectWidget(self, widget: QWidget):

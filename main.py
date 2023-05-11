@@ -10,10 +10,11 @@ from view.qt_py_ui_files.main_window import Ui_MainWindow
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    SettingManager().clearProjects()
-    SettingManager().save()
+    # SettingManager().clearProjects()
+    # SettingManager().save()
     mainwindow = MainWindow()
     mainwindow.show()
+    mainwindow.raise_()
     sys.exit(app.exec())
     # 添加一个项目
     # newProject = Project()

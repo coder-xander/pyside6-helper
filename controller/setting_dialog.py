@@ -27,7 +27,7 @@ class SettingDialog(QDialog):
         else:
             QMessageBox.information(self, "info", "run failed ，project info is not complete！")
 
-    def outputInfoToProject(self,project):
+    def refreshProjectByUi(self, project):
         project.pyside6_uic_path = self.ui.lineEdit_4.text()
         project.pyside6_rcc_path = self.ui.lineEdit_8.text()
         project.pyside6_designer_path = self.ui.lineEdit_6.text()
@@ -48,6 +48,7 @@ class SettingDialog(QDialog):
         def getPath(lineEdit):
             filePath ,_  = QFileDialog.getOpenFileName(self,"select your file")
             print(filePath)
+            self.ui.lineEdit_4.setText(filePath)
             print(_)
         self.ui.pushButton_27.clicked.connect(lambda :getPath(self.ui.lineEdit_4))
         self.ui.pushButton_28.clicked.connect(lambda :getPath(self.ui.lineEdit_8))
@@ -55,7 +56,7 @@ class SettingDialog(QDialog):
         self.ui.pushButton_30.clicked.connect(lambda :getPath(self.ui.lineEdit_6))
         self.ui.pushButton_31.clicked.connect(lambda :getPath(self.ui.lineEdit_7))
         def ok():
-            self.outputInfoToProject(self.project)
+            self.refreshProjectByUi(self.project)
             self.accept()
         self.ui.pushButton_18.clicked.connect(ok)
 

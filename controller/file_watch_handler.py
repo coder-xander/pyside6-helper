@@ -120,11 +120,9 @@ class FileWatchHelper(QObject):
         pass
 
     def startFileWatch(self):
-        if self.project.isUicEnable:
-            self.observer = observers.Observer()
-            watch = self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)
-            self.observer.start()
-        pass
+        self.observer = observers.Observer()
+        watch = self.observer.schedule(self.fileWatchHandle, path=self.project.ui_in_dir, recursive=True)
+        self.observer.start()
 
     def stopFileWatch(self):
         self.observer.stop()

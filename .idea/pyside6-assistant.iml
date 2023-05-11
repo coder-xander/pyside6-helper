@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/model" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/view" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Pipenv (pyside-auto-c)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

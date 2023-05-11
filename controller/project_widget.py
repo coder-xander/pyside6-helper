@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QWidget, QMessageBox, QListWidgetItem, QDialog
+from PySide6.QtWidgets import QWidget, QMessageBox, QListWidgetItem, QDialog, QListWidget
 
+from file_watch_handler import FileWatchHelper
 from setting_dialog import SettingDialog
 from view.qt_py_ui_files.ui_project_widget import Ui_ProjectWidget
 
@@ -18,6 +19,7 @@ class ProjectWidget(QWidget):
         self.item.widget = self
         self.setNewProjectMode(False)
         self.mainwindow = None
+
     def initConnects(self):
         #初始化信号槽
         #lineedits
@@ -45,6 +47,9 @@ class ProjectWidget(QWidget):
         self.close()
         self.mainwindow.ui.stackedWidget.addWidget(self)
         self.mainwindow.ui.stackedWidget.setCurrentWidget(self)
+        self.setNewProjectMode(False)
+        self.settingManager.save()
+        self.item.setSelected(True)
         pass
     def cancelNewProject(self):
         #取消新建一个项目
@@ -72,6 +77,10 @@ class ProjectWidget(QWidget):
             pass
     def runProject(self):
         # 运行项目
+        if self.project.isUicEnable:
+            fileWatchHelper = FileWatchHelper(self.project)
+            fileWatchHelper.startFileWatch()
+            self.log("uic watcher run successfully!")
         pass
     def onProjectNameChanged(self):
         print(self.project)
@@ -117,3 +126,10 @@ class ProjectWidget(QWidget):
         self.project.isUicEnable = self.ui.checkBox.isChecked()
         self.project.isRccEnable = self.ui.checkBox_2.isChecked()
         self.settingManager.save()
+
+    def log(self,msg):
+        if self.ui.listWidget_2.count()>100:
+            self.ui.listWidget_2.removeItemWidget(self.ui.listWidget_2.item(self.ui.listWidget_2.count()-1))
+            self.project.logs.remove(self.project.logs[-1])
+        self.ui.listWidget_2.insertItem(0, QListWidgetItem(msg))
+        self.project.logs.append(msg)
